@@ -81,7 +81,7 @@ def get_layer_mask(nuscenes, polygons, sample_data, extents, resolution):
 def get_object_masks(nuscenes, sample_data, extents, resolution):
 
     # Initialize object masks
-    nclass = len(DETECTION_NAMES) + 1
+    nclass = len(DETECTION_NAMES) 
     grid_width = int((extents[2] - extents[0]) / resolution)
     grid_height = int((extents[3] - extents[1]) / resolution)
     masks = np.zeros((nclass, grid_height, grid_width), dtype=np.uint8)

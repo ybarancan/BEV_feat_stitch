@@ -728,6 +728,15 @@ def do_eval(sess,val_tokens,
              
             
             
+                
+                
+            
+            utils.save_colored_res(np.concatenate([static_estimates[...,:exp_config.num_static_classes],object_estimates[...,:exp_config.num_object_classes]],axis=-1).transpose(2,0,1), 1 - np.squeeze(batch_ref_bev_labels[...,exp_config.num_bev_classes]),'est_'+str(frame_number),os.path.join(validation_res_path, my_scene_token))
+            
+            utils.save_colored_res(np.squeeze(batch_ref_bev_labels[...,:exp_config.num_bev_classes]).transpose(2,0,1), 1 - np.squeeze(batch_ref_bev_labels[...,exp_config.num_bev_classes]), 'gt_'+str(frame_number),os.path.join(validation_res_path, my_scene_token))
+            
+            
+            
             for k in range(exp_config.num_static_classes):
          
                 all_stats , void_pixels= utils.get_all_stats(np.squeeze(batch_ref_bev_labels[...,k]), hard_estimates[...,k],np.squeeze(batch_ref_bev_labels[...,exp_config.num_bev_classes]),mask_iou=exp_config.use_occlusion)
