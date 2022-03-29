@@ -76,6 +76,9 @@ def process_sample_data(nuscenes, map_data, sample_data, lidar, config):
     occ_mask = get_occlusion_mask(cam_points, config.map_extents,
                                     config.map_resolution)
     
+    occ_mask = ~vis_mask | occ_mask 
+    
+    
     masks = np.concatenate([masks, np.stack([vis_mask,occ_mask],axis=0)],axis=0)
     
     # Encode masks as integer bitmask

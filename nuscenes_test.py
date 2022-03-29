@@ -469,7 +469,7 @@ def eval_iterator(my_scene,cur_index, reference_frame_index, single_frame=False,
         
         bev_label = np.flipud(bev_label)
         
-        bev_label = decode_binary_labels(bev_label,exp_config.num_bev_classes+1)
+        bev_label = decode_binary_labels(bev_label,exp_config.num_bev_classes+2)
 
         bev_labels_list.append(bev_label)
       
@@ -724,22 +724,22 @@ def do_eval(sess,val_tokens,
             
             object_estimates = np.concatenate([object_estimates,bg_estimate],axis=-1)
             
-            object_stats = utils.get_confusion(exp_config, np.squeeze(batch_ref_bev_labels[...,exp_config.num_static_classes:]), object_estimates,np.squeeze(batch_ref_bev_labels[...,exp_config.num_bev_classes]),mask_iou=exp_config.use_occlusion)
+            object_stats = utils.get_confusion(exp_config, np.squeeze(batch_ref_bev_labels[...,exp_config.num_static_classes:]), object_estimates,np.squeeze(batch_ref_bev_labels[...,exp_config.num_bev_classes+1]),mask_iou=exp_config.use_occlusion)
              
             
             
                 
                 
             
-            utils.save_colored_res(np.concatenate([static_estimates[...,:exp_config.num_static_classes],object_estimates[...,:exp_config.num_object_classes]],axis=-1).transpose(2,0,1), 1 - np.squeeze(batch_ref_bev_labels[...,exp_config.num_bev_classes]),'est_'+str(frame_number),os.path.join(validation_res_path, my_scene_token))
+            # utils.save_colored_res(np.concatenate([static_estimates[...,:exp_config.num_static_classes],object_estimates[...,:exp_config.num_object_classes]],axis=-1).transpose(2,0,1),  np.squeeze(batch_ref_bev_labels[...,exp_config.num_bev_classes]),'est_'+str(frame_number),os.path.join(validation_res_path, my_scene_token))
             
-            utils.save_colored_res(np.squeeze(batch_ref_bev_labels[...,:exp_config.num_bev_classes]).transpose(2,0,1), 1 - np.squeeze(batch_ref_bev_labels[...,exp_config.num_bev_classes]), 'gt_'+str(frame_number),os.path.join(validation_res_path, my_scene_token))
+            # utils.save_colored_res(np.squeeze(batch_ref_bev_labels[...,:exp_config.num_bev_classes]).transpose(2,0,1), np.squeeze(batch_ref_bev_labels[...,exp_config.num_bev_classes]), 'gt_'+str(frame_number),os.path.join(validation_res_path, my_scene_token))
             
             
             
             for k in range(exp_config.num_static_classes):
          
-                all_stats , void_pixels= utils.get_all_stats(np.squeeze(batch_ref_bev_labels[...,k]), hard_estimates[...,k],np.squeeze(batch_ref_bev_labels[...,exp_config.num_bev_classes]),mask_iou=exp_config.use_occlusion)
+                all_stats , void_pixels= utils.get_all_stats(np.squeeze(batch_ref_bev_labels[...,k]), hard_estimates[...,k],np.squeeze(batch_ref_bev_labels[...,exp_config.num_bev_classes+1]),mask_iou=exp_config.use_occlusion)
                 sample_results.append(all_stats)
                 
             scene_static_results.append(np.array(sample_results))
