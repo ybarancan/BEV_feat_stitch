@@ -15,7 +15,7 @@ load_path = '/scratch_net/catweazle/cany/mapmaker_bev_object/logdir/deeplabTrue/
 
 nuscenes_root = '/srv/beegfs02/scratch/tracezuerich/data/datasets/nuScenes'
 nuscenes_processed_root = '/srv/beegfs02/scratch/tracezuerich/data/cany'
-nuscenes_bev_root = '/srv/beegfs02/scratch/tracezuerich/data/cany/monomaps_labels_vanilla_deneme'
+nuscenes_bev_root = '/srv/beegfs02/scratch/tracezuerich/data/cany/monomaps_labels_vanilla'
 # Data settings
 data_mode = '2D'  # 2D or 3D
 #image_size = (720,1280)

@@ -1138,100 +1138,52 @@ def get_visible_mask(instrinsics, image_width, extents, resolution):
     # Return all points which lie within the camera bounds
     return (ucoords >= 0) & (ucoords < image_width)
 
-
-def save_colored_res(array_list, bev_mask, name,path):
-    
-    class2rgb = {0: [0, 48, 117], 1: [0, 72, 172], 2: [0, 61, 147],
-                 3: [0, 29, 68], 4: [179, 0, 27], 5: [108, 13, 27],
-                 6: [141, 2, 136], 7: [255, 255, 255], 8: [179, 85, 0],
-                 9: [227, 216, 25], 10: [255, 255, 255], 11: [255, 255, 255],
-                 12: [255, 255, 255], 13: [128,128,128]}
-    class_indices = []
-    bg_rgb = [0, 29, 68]
-
-    '''
-    Generate colored BEV result images.
-    1. Get mask class index from mask path
-    2. Get thresholded image mask
-    3. Generate colored mask
-    '''
-    colored_images = {}
-    for ind in range(len(array_list)):
-        temp_image = np.copy(array_list[ind])
-        image = temp_image > 0.5
-
-        r, g, b = class2rgb[ind]
-        colored_image = np.stack((r * image, g * image, b * image)).transpose(1,2,0)
-        colored_images[ind] = np.asarray(colored_image, dtype=np.uint8)
-    
-    bg = np.uint8(np.stack((bg_rgb[0] * np.ones_like(image), bg_rgb[1] * np.ones_like(image), bg_rgb[2] * np.ones_like(image))).transpose(1,2,0))
-    '''
-    Generate new black image.
-    Add masks in given order (first = bottom).
-    Mask over BEV triangle.
-    '''
-    result_image = np.zeros(colored_image.shape, dtype=np.uint8)
-    order = [12,11,10,9,8,7,6,5,4,3,2,1,0,13]
-
-    bev_mask = np.stack((bev_mask, bev_mask, bev_mask)).transpose(1,2,0)
-    for i in order:
-        mask = np.sum(result_image, axis=-1) == 0
-        mask = np.stack((mask, mask, mask)).transpose(1,2,0)
-        image = np.asarray(colored_images[i])
-        result_image += image * mask  * bev_mask
-    
-    mask = np.sum(result_image, axis=-1) == 0
-    mask = np.stack((mask, mask, mask)).transpose(1,2,0)
-    image = bg
-    result_image += image * mask * bev_mask
-    Image.fromarray(result_image).save(os.path.join(path,name + '.jpg'))
-    
-
-
-
-def save_array(array,name,path,slice_last_dim=True,is_rgb=False,to_size=None,correct=True,val=False, use_deeplab=True):
-    
-    
-        
-    if is_rgb:
-        if correct:
-            if not use_deeplab:
-                array = array + means_image
-    for k in range(array.shape[0]):
-        
-        cur_slice = np.squeeze(array[k,...])
-        if to_size is not None:
-            if is_rgb:
-                cur_slice = cv2.resize(cur_slice,to_size, interpolation = cv2.INTER_LINEAR)
-            else:
-                cur_slice = cv2.resize(cur_slice,to_size, interpolation = cv2.INTER_NEAREST)
-        
-        if is_rgb:
-            img_png=Image.fromarray(np.uint8(cur_slice))
-            
-            if val:
-                img_png.save(os.path.join(path,name+'_'+str(k)+'.jpg'))
-            else:
-                img_png.save(os.path.join(path,name+'_'+str(k)+'.jpg'))
-        else:
-            
-            if slice_last_dim:
-                for m in range(cur_slice.shape[-1]):
-                    
-                    img_png=Image.fromarray(np.uint8(255*cur_slice[...,m]))
-                    if val:
-                        img_png.save(os.path.join(path,name+'_batch_'+str(k)+'_class_'+str(m)+'.jpg'))
-                    else:
-                        img_png.save(os.path.join(path,name+'_batch_'+str(k)+'_class_'+str(m)+'.jpg'))
-                    
-            else:
-                
-                
-                img_png=Image.fromarray(np.uint8(cur_slice*255))
-                if val:
-                    img_png.save(os.path.join(path,name+'_'+str(k)+'.jpg'))
-                else:
-                    img_png.save(os.path.join(path,name+'_'+str(k)+'.jpg'))
+#
+#
+#
+#def save_array(array,name,slice_last_dim=True,is_rgb=False,to_size=None,correct=True,val=False):
+#     
+#    
+#        
+#     if is_rgb:
+#         if correct:
+#             if not use_deeplab:
+#                 array = array + means_image
+#     for k in range(array.shape[0]):
+#        
+#         cur_slice = np.squeeze(array[k,...])
+#         if to_size is not None:
+#             if is_rgb:
+#                 cur_slice = cv2.resize(cur_slice,to_size, interpolation = cv2.INTER_LINEAR)
+#             else:
+#                 cur_slice = cv2.resize(cur_slice,to_size, interpolation = cv2.INTER_NEAREST)
+#         
+#         if is_rgb:
+#             img_png=Image.fromarray(np.uint8(cur_slice))
+#             
+#             if val:
+#                 img_png.save(os.path.join(validation_res_path,name+'_'+str(k)+'.jpg'))
+#             else:
+#                img_png.save(os.path.join(train_results_path,name+'_'+str(k)+'.jpg'))
+#         else:
+#             
+#             if slice_last_dim:
+#                 for m in range(cur_slice.shape[-1]):
+#                     
+#                     img_png=Image.fromarray(np.uint8(255*cur_slice[...,m]))
+#                     if val:
+#                        img_png.save(os.path.join(validation_res_path,name+'_batch_'+str(k)+'_class_'+str(m)+'.jpg'))
+#                     else:
+#                        img_png.save(os.path.join(train_results_path,name+'_batch_'+str(k)+'_class_'+str(m)+'.jpg'))
+#                     
+#             else:
+#                 
+#                 
+#                img_png=Image.fromarray(np.uint8(cur_slice*255))
+#                if val:
+#                    img_png.save(os.path.join(validation_res_path,name+'_'+str(k)+'.jpg'))
+#                else:
+#                    img_png.save(os.path.join(train_results_path,name+'_'+str(k)+'.jpg'))
          
 def single_image_vgg_preprocess(orig_img, orig_label):
     means_image = np.array([123.68, 116.779, 103.939], dtype=np.single)

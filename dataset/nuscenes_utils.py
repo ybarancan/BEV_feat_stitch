@@ -2,7 +2,7 @@ import os
 import numpy as np
 from shapely import geometry, affinity
 from pyquaternion import Quaternion
-import logging
+
 from nuscenes.eval.detection.utils import category_to_detection_name
 from nuscenes.eval.detection.constants import DETECTION_NAMES
 from nuscenes.utils.data_classes import LidarPointCloud
@@ -68,11 +68,8 @@ def get_layer_mask(nuscenes, polygons, sample_data, extents, resolution):
         polygon = transform_polygon(polygon, inv_tfm)
 
         # Render the polygon to the mask
-        try:
-            render_shapely_polygon(mask, polygon, extents, resolution)
-        except:
-         
-            continue
+        render_shapely_polygon(mask, polygon, extents, resolution)
+    
     return mask.astype(np.bool)
 
 
@@ -81,7 +78,7 @@ def get_layer_mask(nuscenes, polygons, sample_data, extents, resolution):
 def get_object_masks(nuscenes, sample_data, extents, resolution):
 
     # Initialize object masks
-    nclass = len(DETECTION_NAMES) 
+    nclass = len(DETECTION_NAMES) + 1
     grid_width = int((extents[2] - extents[0]) / resolution)
     grid_height = int((extents[3] - extents[1]) / resolution)
     masks = np.zeros((nclass, grid_height, grid_width), dtype=np.uint8)
@@ -143,9 +140,8 @@ def make_transform_matrix(record):
 
 def render_shapely_polygon(mask, polygon, extents, resolution):
 
-    
     if polygon.geom_type == 'Polygon':
-        # logging.error('EXTERIOR ' + str(polygon.exterior.coords))
+
         # Render exteriors
         render_polygon(mask, polygon.exterior.coords, extents, resolution, 1)
 
@@ -155,8 +151,6 @@ def render_shapely_polygon(mask, polygon, extents, resolution):
     
     # Handle the case of compound shapes
     else:
-
-        
         for poly in polygon:
             render_shapely_polygon(mask, poly, extents, resolution)
 

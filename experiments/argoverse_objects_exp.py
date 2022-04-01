@@ -67,7 +67,6 @@ use_grid=False
 
 extents = [-25,25,1,50]
 resolution = 0.25
-map_resolution = 0.25
 extra_space = [96,100]
 
 project_extents = [-25,25,1,50]

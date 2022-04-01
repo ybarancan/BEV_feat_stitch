@@ -67,19 +67,14 @@ def process_sample_data(nuscenes, map_data, sample_data, lidar, config):
     sensor = nuscenes.get('calibrated_sensor', 
                           sample_data['calibrated_sensor_token'])
     intrinsics = np.array(sensor['camera_intrinsic'])
-    vis_mask = get_visible_mask(intrinsics, sample_data['width'], 
+    masks[-1] |= ~get_visible_mask(intrinsics, sample_data['width'], 
                                    config.map_extents, config.map_resolution)
     
     # Transform lidar points into camera coordinates
     cam_transform = nusc_utils.get_sensor_transform(nuscenes, sample_data)
     cam_points = transform(np.linalg.inv(cam_transform), lidar)
-    occ_mask = get_occlusion_mask(cam_points, config.map_extents,
+    masks[-1] |= get_occlusion_mask(cam_points, config.map_extents,
                                     config.map_resolution)
-    
-    occ_mask = (~vis_mask) | occ_mask 
-    
-    
-    masks = np.concatenate([masks, np.stack([vis_mask,occ_mask],axis=0)],axis=0)
     
     # Encode masks as integer bitmask
     labels = encode_binary_labels(masks)

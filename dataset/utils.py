@@ -28,9 +28,6 @@ def transform_polygon(polygon, affine):
 
 
 def render_polygon(mask, polygon, extents, resolution, value=1):
-    
-    
-    
     polygon = (polygon - np.array(extents[:2])) / resolution
     polygon = np.ascontiguousarray(polygon).round().astype(np.int32)
     cv2.fillConvexPoly(mask, polygon, value)
