@@ -1,4 +1,6 @@
-Official code for Understanding Bird’s-Eye View of RoadSemantics using an Onboard Camera
+Official code for Understanding Bird’s-Eye View of RoadSemantics using an Onboard Camera - RAL/ICRA 2022
+
+[Link to paper](https://arxiv.org/pdf/2012.03040.pdf) 
 
 
 Written with Tensorflow.
