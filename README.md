@@ -3,6 +3,7 @@ Official code for Understanding Bird’s-Eye View of RoadSemantics using an Onbo
 [Link to paper](https://arxiv.org/pdf/2012.03040.pdf) 
 
 Check out our work on structured scene representation:
+
 STSU (ICCV'21): [https://github.com/ybarancan/STSU](https://github.com/ybarancan/STSU)
 
 TPLR (CVPR'22): [https://github.com/ybarancan/TopologicalLaneGraph](https://github.com/ybarancan/TopologicalLaneGraph)
